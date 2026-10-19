@@ -1,0 +1,85 @@
+Now prepare my existing JOINT CARE website for production deployment on Vercel.
+
+IMPORTANT:
+Do not rebuild the project from scratch.
+Do not remove existing features.
+Do not overwrite working code unnecessarily.
+
+STEP 1 — INSPECT THE PROJECT
+- Identify the framework and package manager.
+- Inspect package.json and the existing build scripts.
+- Identify any required environment variables.
+- Identify any backend services, server routes, database connections, API integrations, and external dependencies.
+- Determine whether the application can run on Vercel without architectural changes.
+
+STEP 2 — PREPARE FOR VERCEL
+- Ensure the project uses a supported framework and compatible dependencies.
+- Verify the production build command.
+- Verify the correct output configuration.
+- Add or update vercel.json only if necessary.
+- Do not add unnecessary configuration files.
+- Ensure static images and the JOINT CARE logo are served correctly in production.
+- Verify that all internal routes work after deployment.
+- Ensure the website is responsive and production-ready.
+
+STEP 3 — SECURITY
+- Never expose API keys, private keys, database passwords, wallet secrets, or tokens in frontend code.
+- Never commit .env files containing secrets.
+- Identify required environment variables and document their names.
+- Use Vercel Environment Variables for production secrets.
+- If the project interacts with a blockchain, inspect the existing chain configuration and preserve the intended network.
+- Do not change smart-contract addresses, blockchain networks, or production credentials without my approval.
+
+STEP 4 — TEST THE PRODUCTION BUILD
+- Run the package manager's appropriate install command if necessary.
+- Run the production build.
+- Fix build errors caused by the project configuration or your changes.
+- Resolve missing image imports and incorrect asset paths.
+- Check for TypeScript and lint errors when the project has those checks configured.
+- Do not claim the build passed unless it actually passes.
+- Report any remaining errors clearly.
+
+STEP 5 — CONNECT TO GITHUB
+If the project is not already connected to GitHub:
+- Explain how to create or select a GitHub repository.
+- Help me push the existing project to that repository.
+- Exclude node_modules, build output, .next, local environment files, and other generated files where appropriate.
+- Never commit secrets.
+- Preserve the project's existing Git history if practical.
+
+If GitHub is already connected, use the existing repository.
+
+STEP 6 — DEPLOY TO VERCEL
+- Help me import the GitHub repository into Vercel.
+- Use the correct framework preset and build settings.
+- Identify all required environment variables before deployment.
+- Do not invent environment variable values.
+- Do not deploy with missing critical secrets or broken production configuration.
+- If Vercel integration or authorization is unavailable in this environment, give me the exact steps needed in the Vercel dashboard.
+
+STEP 7 — VERIFY THE DEPLOYMENT
+After deployment:
+- Verify that the production website loads.
+- Check that the JOINT CARE logo displays correctly.
+- Check the hero section, navigation, Telegram button, and X button.
+- Check responsive behavior.
+- Inspect deployment logs for errors.
+- Verify that internal routes work.
+- Report the actual deployment URL only after Vercel confirms deployment success.
+
+STEP 8 — AUTOMATIC FUTURE DEPLOYMENTS
+Configure the GitHub-to-Vercel integration so that future changes pushed to the production branch trigger automatic deployments.
+Use preview deployments for changes on other branches when supported.
+
+FINAL REPORT
+Tell me:
+1. Whether the production build passes.
+2. Whether the GitHub repository is connected.
+3. Whether Vercel deployment succeeded.
+4. The actual production URL, if available.
+5. Any environment variables I must configure.
+6. Whether automatic deployments are enabled.
+
+Do not claim that deployment is complete if authentication, repository access, or Vercel authorization is still required.
+
+Proceed carefully and preserve the existing project.

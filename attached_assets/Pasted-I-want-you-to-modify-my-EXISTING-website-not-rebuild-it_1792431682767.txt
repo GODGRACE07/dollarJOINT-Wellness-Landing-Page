@@ -1,0 +1,71 @@
+I want you to modify my EXISTING website, not rebuild it from scratch.
+
+PROJECT: $JOINT — JOINT CARE Medical Cannabis & Wellness.
+
+IMPORTANT: I have attached a new logo image showing a friendly green cannabis leaf mascot, a medical shield with a red cross, decorative botanical elements, and the words "JOINT CARE" and "MEDICAL CANNABIS & WELLNESS".
+
+Your task is to replace the current leaf logo in my existing website with this exact attached logo.
+
+STEP 1 — REPLACE THE LOGO
+- Locate the existing logo in the website's navigation bar. It currently displays a small circular green leaf icon next to "$JOINT".
+- Replace that leaf icon with the attached JOINT CARE logo.
+- Use the actual attached image asset. Do not redraw it, generate a different logo, or substitute an emoji or generic cannabis icon.
+- Preserve the original proportions of the logo.
+- Use object-fit: contain so the logo does not become distorted.
+- Make the logo sharp, properly aligned, and responsive on desktop and mobile.
+- If necessary, place the image in the project's public/assets directory and reference it correctly.
+- Do not leave the old leaf icon visible beside the new logo.
+
+STEP 2 — UPDATE THE BRANDING
+- Update the website branding to JOINT CARE.
+- Keep the $JOINT ticker/name where it makes sense for the token identity, but the primary brand should be JOINT CARE.
+- Update the browser page title and relevant metadata to reflect JOINT CARE — Medical Cannabis & Wellness.
+- Update the navigation logo area to display the new JOINT CARE identity.
+- Check headings, footer branding, and other places where the old logo or old brand identity appears.
+- Avoid changing unrelated content or breaking existing functionality.
+
+STEP 3 — PRESERVE THE EXISTING DESIGN
+Maintain the current website's premium design:
+- Soft mint-green and light-blue gradient background.
+- Dark teal typography.
+- Elegant rounded navigation bar.
+- Existing Mission, Pillars, and Launch navigation.
+- Existing Telegram and X buttons.
+- Existing hero section and floating information badges.
+- Existing responsive layout and animations, if present.
+
+Make the new logo fit naturally into this design.
+
+STEP 4 — HERO SECTION
+- If the current hero section contains an enlarged version of the old logo, replace it with the same attached JOINT CARE logo.
+- Keep the logo prominent, crisp, and visually balanced.
+- Avoid excessive cropping or stretching.
+- Ensure the logo does not overlap the main headline or navigation.
+- Make the design work on desktop, tablet, and mobile screens.
+
+STEP 5 — IMPLEMENTATION
+- First inspect the existing codebase and identify the framework, entry points, image assets, and styling system.
+- Reuse the existing components and styling conventions.
+- Do not delete working features or replace the application with a simplified demo.
+- Do not introduce unnecessary dependencies.
+- Use the attached image as the actual logo asset.
+- If the attachment is not accessible to your coding environment, tell me exactly where to upload it and what filename to use. Do not silently substitute another image.
+
+STEP 6 — VERIFY
+After making the changes:
+- Run the existing development server.
+- Check that the logo loads correctly.
+- Check the navigation and hero section.
+- Check desktop and mobile layouts.
+- Resolve any build errors caused by your changes.
+- Verify that existing buttons and navigation still work.
+
+Make the changes directly in the existing project files.
+
+At the end, tell me:
+1. Which files you changed.
+2. Where the new logo image is stored.
+3. Whether the application builds successfully.
+4. Whether the website is ready for Vercel deployment.
+
+Start by inspecting the existing project, then implement the changes.
