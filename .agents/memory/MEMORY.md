@@ -1,0 +1,1 @@
+- [Joint Care content guardrails](joint-care-content-guardrails.md) — lead with patient-centered education; keep health claims cautious and the local-law disclaimer visible.

@@ -1,0 +1,201 @@
+ROLE
+You are a senior UI/UX designer and award-level creative developer (Awwwards / FWA / CSS Design Awards caliber) with deep experience in premium health and wellness brands. Design AND build a single-page landing page that is rich in motion, animation, and interactive effects, and that is equally excellent on mobile phones and desktop screens. It must feel calm, trustworthy, and clinical-clean. Make deliberate design decisions at every step. Do not produce a generic template or "AI-looking" layout.
+
+PROJECT
+Brand: $JOINT, also known as Joint Care, tagline "Medical Cannabis & Wellness".
+Purpose: the official hub for a Web3 wellness community delivering medical cannabis education, joint care awareness, and patient advocacy.
+Official launch: December 2026.
+Audience: patients, wellness-curious adults, and crypto-native community members who want credibility, not hype. Most will arrive from Telegram and X, so MOBILE TRAFFIC IS THE MAJORITY. Design mobile first, then enhance for desktop.
+Tone: trustworthy, warm, optimistic, premium. Medical wellness brand first, crypto project second.
+
+DESIGN GOALS
+1. Immersive and alive: motion with purpose and rhythm from the first second to the footer.
+2. Two first-class experiences: a thumb-friendly, touch-driven mobile experience and a rich cursor-driven desktop experience. Neither is an afterthought.
+3. Premium polish: deliberate spacing, strong typographic hierarchy, consistent easing.
+4. Fast, accessible, SEO-ready, even with heavy motion.
+
+AVOID: purple/neon gradients, generic SaaS hero layouts, stock-template look, emoji as icons, "crypto casino" visuals, cannabis cliches (rasta colors, smoke-shop vibes), heavy drop shadows, walls of text, motion that is chaotic, jittery, or blocks reading.
+
+BRAND ASSET
+Use the uploaded logo (318612.jpg) as the official mascot.
+- Its background is a sky-to-mint gradient. Match the hero background so the mascot blends in with no visible box. If feasible, cut out the background to a transparent PNG/WebP.
+- Reuse the mascot in the hero, final CTA (peeking from the side), favicon (cropped from the leaf crown), preloader, and OG image.
+
+COLOR SYSTEM (from the logo, define as CSS variables / Tailwind tokens)
+--sky #BFE3EE | --mint #CDEBD6 | --cream #F6FBF7 (main surface) | --teal-900 #0A3436 (dark sections) | --teal-700 #0E4B4F (headings, primary buttons) | --leaf #3F9B45 (icons, links) | --lotus #F2A7A0 (tiny accents) | --gold #D8B65A (CTAs, highlights, from the ribbon) | --cross-red #D8383A (only the medical cross motif)
+Rules: light-first, teal for text and dark sections, gold sparingly, red as micro-accent only. WCAG AA contrast. Optional dark-mode toggle using the teal-900 palette.
+
+TYPOGRAPHY
+- Display: Fraunces (variable serif, optical size on, subtle SOFT axis if available).
+- Body/UI: Plus Jakarta Sans.
+- Fluid scale with clamp(): H1 about 2.4rem (mobile) to 6.5rem (desktop), H2 1.9rem to 4rem, body 1rem to 1.125rem. Never below 16px body text on mobile. Tight tracking on display, wide tracking on small-caps eyebrows.
+- Make sure the three-line H1 never overflows or awkwardly wraps at 360px width.
+- Self-host fonts, preload critical weights, font-display: swap.
+
+VISUAL LANGUAGE (2026 trends, applied with restraint)
+- Bento-grid cards, 24-32px radii (20px on mobile), 1px translucent borders, soft glass (backdrop-blur, reduced blur on mobile for performance), layered soft shadows.
+- Animated gradient mesh background (sky + mint + faint gold), slowly drifting.
+- Organic morphing blobs, faint line-art SVGs (DNA helix, cannabis leaf, joint/bone outline, lotus) at low opacity.
+- Film-grain overlay (about 4%) with subtle animated noise (static on mobile).
+- Custom 1.5px line icons with rounded caps. No emoji.
+- 12-column grid on desktop, 4-column on mobile, max content width 1200-1320px, section padding clamp(64px, 10vw, 160px).
+
+RESPONSIVE STRATEGY (core requirement)
+Build mobile-first with Tailwind breakpoints: base (360), sm 480, md 768, lg 1024, xl 1280, 2xl 1536, 3xl 1920+. Use fluid clamp() for type and spacing so layouts scale smoothly between breakpoints, not just jump.
+
+MOBILE (360-767px)
+- Single-column layout. Hero order: eyebrow, H1, subheadline, buttons, then mascot below (mascot sized about 80% of viewport width, never cropped awkwardly).
+- Hero height uses min-height: 100svh/dvh with safe-area insets (env(safe-area-inset-*)) so it never jumps with browser toolbars.
+- Buttons full-width, stacked, minimum 52px height, 12px gap. All tap targets at least 48x48px. Thumb-zone friendly: key actions reachable at the bottom half of the screen.
+- Navbar: compact floating glass bar with logo and hamburger. Hamburger morphs to X and opens a full-screen sheet with a circular clip-path expansion, staggered large links, and both social buttons at the bottom. Focus trap, Esc closes, body scroll locked while open.
+- Sticky bottom mini-CTA bar ("Join Telegram") that appears after the hero scrolls away and hides in the final CTA section. Respect safe-area bottom inset.
+- Pillar cards stacked, full width. Replace hover/tilt/spotlight with touch equivalents: subtle press-scale on touch, tap-triggered icon animation, and a scroll-linked glow as each card centers in the viewport. Optionally a horizontal snap-scroll carousel with dots only if it improves flow; otherwise stack.
+- Timeline renders vertically with the progress line filling on scroll. Countdown tiles in a 2x2 grid with large readable numbers.
+- Effects on mobile: no custom cursor, no mouse parallax (use gentle auto-drift or optional device-tilt with permission handling), particle count 15-25, static grain, reduced blur radii, simplified marquee, no heavy WebGL. Preloader shorter (max 1.2s).
+- No hover-only information anywhere. No horizontal scroll at any width. Prevent iOS input zoom and tap-highlight flash (-webkit-tap-highlight-color transparent). Use touch-action appropriately.
+- Test in landscape orientation: hero must still be usable.
+
+TABLET (768-1023px)
+- 2-column bento grid, hero can switch to side-by-side if height allows, otherwise stacked with larger mascot. Navbar can show inline links. Hybrid input support: enable hover effects only via @media (hover: hover) and (pointer: fine); everything else uses touch behavior.
+
+DESKTOP (1024px+)
+- Hero is a two-column split: text left (about 55%), mascot stage right (about 45%) with rotating badge, glow, chips, and smoke wisps. Hero fits within 100vh at common sizes (1366x768, 1440x900, 1920x1080) without clipping.
+- Full asymmetric bento: one large card spanning two rows plus two smaller cards.
+- Floating glass pill navbar, centered, with inline links and active-section indicator.
+- Full effects: custom cursor, mouse parallax (3 depth layers), 3D card tilt, spotlight, magnetic buttons, pinned scroll scenes, WebGL/canvas particles (40-80).
+- Ultra-wide (1920-2560): cap content to 1320px, keep backgrounds and gradient mesh full-bleed, scale the mascot with clamp() so it never looks tiny or pixelated (provide a 2x asset).
+
+DEVICE-AWARE ENHANCEMENT RULES
+- Gate effects with matchMedia: (hover: hover) and (pointer: fine) for cursor, tilt, spotlight, magnetic effects. (pointer: coarse) gets touch-friendly alternatives.
+- Reduce effects automatically if navigator.hardwareConcurrency <= 4 or deviceMemory <= 4 or the connection is slow (saveData).
+- Handle resize and orientation change cleanly: refresh ScrollTrigger, recalc pinned sections, no layout jumps.
+
+MOTION AND EFFECTS SYSTEM
+Libraries: GSAP + ScrollTrigger (scroll choreography, pinning, scrubbing; manual text splitting if SplitText is unavailable), Framer Motion (component and layout animation, presence), Lenis (smooth scroll synced with ScrollTrigger; use native momentum scroll on touch devices instead of hijacking it). Optional lazy-loaded canvas/WebGL layer (OGL or Three.js) on desktop only.
+Global easing: cubic-bezier(0.22, 1, 0.36, 1) for UI, expo-out for reveals. Durations: 300-700ms UI, 900-1400ms hero and section reveals.
+
+A. Preloader (max 1.8s desktop / 1.2s mobile, skippable, first visit per session only)
+Mascot silhouette fills with color while a counter runs 0 to 100, then the screen splits and wipes away (clip-path reveal) into the hero. Content must remain crawlable.
+
+B. Custom cursor (desktop fine-pointer only)
+Small gold dot plus a lagging soft ring (spring physics). Ring grows over links/cards with a label ("View", "Join"), becomes a magnetic blob on buttons, shrinks on press. Never hide the native cursor on text inputs.
+
+C. Hero choreography
+- Animated gradient mesh drifting slowly.
+- Floating soft leaf and pollen particles drifting upward (canvas), pausing when the tab is hidden or the hero is off-screen; subtly repelled by the cursor on desktop.
+- H1 reveals line by line with masked slide-up and staggered word/character animation. A gold hand-drawn underline path draws itself (SVG stroke-dashoffset) under "Natural Relief", "Patient Advocacy", and "Web3 Wellness" in sequence.
+- Subheadline fades in with a blur-to-sharp transition.
+- Buttons enter with a spring pop, shine sweep, sliding arrow, gold glow pulse; magnetic hover on desktop, press-scale on touch.
+- Mascot enters with scale-and-fade plus a small bounce, then loops a slow float (6-8s), shadow squash-and-stretch, and a pulsing green radial glow. Mouse parallax on desktop; gentle auto-drift on mobile.
+- Rotating circular text badge "MEDICAL CANNABIS & WELLNESS · " orbits the mascot, speed increasing slightly with scroll velocity.
+- Floating glass chips ("Education First", "Patient Led", "Community Driven") bob on independent sine paths (on mobile, keep them inside the viewport, smaller, and non-overlapping with text).
+- Soft smoke/vapor wisps curl above the mascot, echoing the logo.
+- Scroll cue: animated line draws down and loops (desktop); hidden on mobile.
+- On scroll out of the hero, the mascot scales down and drifts, text parallaxes slower.
+
+D. Scroll-driven storytelling
+- Thin gold scroll-progress bar at the top.
+- Section transitions use overlapping clip-path or curved SVG dividers that morph on scroll.
+- Large outlined display words ("RELIEF", "ADVOCACY", "WELLNESS") as a velocity-reactive marquee between sections (slight skew with scroll speed), clipped in an overflow-hidden wrapper.
+- Background color shifts smoothly from sky/mint to cream to deep teal across sections.
+- Pillars: on desktop the header pins briefly while cards stagger in from alternating directions with slight rotation settling to zero; on mobile use simple staggered fade-up with no pinning.
+- Launch: on desktop a short pinned scrub fills the timeline, lights nodes in sequence, and rolls in the countdown tiles; on mobile the same sequence plays on scroll without pinning.
+
+E. Card and component effects
+- Pillar cards: desktop 3D tilt (4-6 degrees), cursor spotlight, glare, border that traces a gradient light, accent glow in each card's own color. Icon animations: flask bubbles rise, bone joint flexes, shield pulses with the cross glowing. On touch, trigger these icon animations on tap and when the card enters the viewport center.
+- Numbered labels (01/02/03) count up or flip in.
+- Text effects: headings reveal word by word; eyebrow labels use a short text-scramble on enter; key phrases get animated gold highlight swipes.
+- Buttons and nav links: animated underline, ripple on click/tap.
+- Countdown: digits roll vertically (odometer style), tiles have a subtle breathing glow, a thin ring progress animates around the seconds tile.
+- Timeline nodes pulse softly; the active node has a radar-ping ring.
+- Final CTA: mascot peeks from the edge, waves or bobs, and follows the cursor on desktop (auto-bob on mobile); a small tasteful canvas leaf burst fires on first CTA hover (desktop) or tap (mobile).
+- Ambient: slow-rotating DNA helix SVG, floating leaves with depth-of-field blur, drifting blobs, occasional soft light sweeps across glass surfaces (fewer on mobile).
+- Navbar: desktop glass pill morphs (width and blur) on scroll, hides on scroll down and reveals on scroll up, active indicator slides between links via shared layout animation.
+
+F. Performance guardrails
+- Animate only transform and opacity (clip-path/filter sparingly). No layout-thrashing animations.
+- will-change used judiciously, IntersectionObserver pauses off-screen loops, requestAnimationFrame for canvas, devicePixelRatio capped at 2, all ambient animation paused when the tab is hidden.
+- Lazy-load canvas/WebGL and GSAP plugins; code-split non-critical animation code.
+- 60fps on a mid-range phone. Targets: Lighthouse mobile 90+ performance, 95+ accessibility/SEO/best practices, LCP under 2.0s on mobile, CLS near 0, INP under 200ms.
+- prefers-reduced-motion: disable parallax, float loops, particles, marquee, preloader, cursor effects, and pinned scrubs; keep simple opacity fades only. Provide this as a real, tested mode.
+
+SITE STRUCTURE AND EXACT COPY
+
+0. NAVBAR
+Left: small logo mark plus "$JOINT". Center: Mission, Pillars, Launch (smooth scroll, active highlight). Right: small gold-accent "Join Telegram" button. Mobile: logo plus hamburger as described above.
+
+1. HERO
+- Eyebrow: "Medical Cannabis & Wellness"
+- H1 (three stacked lines): "Natural Relief. Patient Advocacy. Web3 Wellness."
+- Subheadline: "A dedicated brand bringing medical cannabis education, joint care, and physical healing to the community."
+- Buttons: [Join Official Telegram] primary (solid teal-700, white text, arrow icon) and [Follow on X] secondary (glass outline, X icon).
+- Visual: the mascot with all effects above.
+
+2. MISSION & EDUCATIONAL PILLARS (id="pillars")
+- Eyebrow: "Core Mission"
+- H2: "Educational Pillars"
+- Cards:
+  01 Medical Cannabis Science (flask + leaf icon, leaf-green accent): "Breaking down plant therapy, the Entourage Effect, and natural cannabinoid recovery."
+  02 Joint Care & Relief (joint/bone icon, gold accent): "Raising awareness for non-pharmaceutical solutions for chronic pain and inflammation."
+  03 Patient Advocacy (shield with cross icon, red-to-lotus accent): "Supporting patient rights, access, and real-world plant education."
+
+3. LAUNCH TIMELINE & BRAND PHILOSOPHY (id="launch", deep teal-900 section with gold and mint glows and subtle pollen particles)
+- Eyebrow: "Launch Timeline & Brand Philosophy"
+- H2: "Built for the Long Term"
+- Body: "We are skipping short-term speculative hype to focus on authentic community engagement, verified educational resources, and brand authority."
+- Feature block: "Official Launch Date: December 2026" with a live countdown to December 1, 2026 00:00 local time (Days / Hours / Minutes / Seconds). After the date passes, show "We are live."
+- Timeline with three nodes: "Community Building" (now), "Education Library", "Official Launch: December 2026". Horizontal on desktop, vertical on mobile. Do not invent specifics beyond these labels.
+- Principle chips: "Authentic Community", "Verified Education", "Brand Authority".
+
+4. FINAL CTA STRIP
+- H2: "Join the community."
+- Line: "Follow along for education, updates, and launch news."
+- Both buttons repeated, mascot peeking from the side (on mobile peeks from the bottom or corner without covering buttons).
+
+5. FOOTER
+Logo and tagline, social buttons, quiet nav, visible handle @PassTheJointSol. Disclaimer: "Educational content only. Not medical advice. Consult a licensed healthcare professional. Cannabis laws vary by region; you must meet local legal age requirements. $JOINT is not financial advice." Copyright: "© 2026 $JOINT. All rights reserved." On mobile, stack footer content with generous spacing and leave room for the sticky bottom bar.
+
+SOCIAL LINKS (single source of truth in /src/config.ts)
+TELEGRAM_URL = "https://t.me/PassTheJointSol"
+X_URL = "https://x.com/PassTheJointSol"
+Open in a new tab with target="_blank" rel="noopener noreferrer". aria-labels: "Join the official $JOINT Telegram" and "Follow $JOINT on X". No component hardcodes a URL or copy; everything imports from config.ts.
+
+ACCESSIBILITY
+Semantic landmarks, one H1, skip-to-content link, visible 2px gold focus rings, full keyboard support, alt text on mascot, aria-hidden on decorative SVG/canvas, accessible mobile menu (focus trap, Esc closes), countdown with a static accessible text alternative and aria-live="off", AA contrast everywhere. Split-text and scramble effects keep real text readable by screen readers (aria-label on the parent, aria-hidden on split spans). Support browser zoom up to 200% and text-size increases without breaking layout.
+
+SEO
+Title: "$JOINT | Joint Care: Medical Cannabis & Wellness". Concise meta description, canonical, theme-color #0E4B4F, viewport meta with viewport-fit=cover, Open Graph and Twitter card (1200x630 from the mascot on the brand gradient), favicon and Apple touch icon set, web manifest, JSON-LD Organization schema.
+
+IMAGES
+Export the mascot as WebP/AVIF with responsive srcset (480, 800, 1200, 1800 widths) and sizes attributes. Preload the hero mascot. Lazy-load everything below the fold. Always set width/height to avoid layout shift.
+
+TECH STACK AND STRUCTURE
+React + Vite + TypeScript + Tailwind CSS + GSAP/ScrollTrigger + Framer Motion + Lenis.
+/src
+  config.ts
+  components/ (Preloader, Cursor, Navbar, MobileMenu, StickyMobileCta, Hero, MascotStage, ParticleField, Marquee, PillarCard, PillarsGrid, Launch, Countdown, Timeline, FinalCta, Footer, Button, GrainOverlay, ScrollProgress, SplitText, Icons)
+  hooks/ (useReducedMotion, useMediaQuery, useIsTouch, useMagnetic, useTilt, useScrollVelocity, useInView)
+  styles/ (tokens, globals)
+  assets/
+Define design tokens in the Tailwind config. Clean, commented, production-grade code. Clean up all GSAP/ScrollTrigger instances on unmount.
+
+QA CHECKLIST (verify before finishing)
+- Test at 360x640, 390x844, 430x932, 768x1024, 1024x768, 1280x720, 1366x768, 1440x900, 1920x1080, 2560x1440, plus mobile landscape. Fix every overflow, clipping, overlap, and tap-target issue.
+- Mobile: no horizontal scroll, no hover-only features, sticky bottom CTA works and never covers content, menu sheet works, buttons are thumb-friendly, effects run smoothly.
+- Desktop: cursor effects, parallax, tilt, and pinned scenes work smoothly and disable cleanly on touch.
+- Mascot blends seamlessly with the hero background at all sizes.
+- No jank, flashing, or layout shift; nothing blocks reading or clicking.
+- Reduced-motion mode and keyboard-only navigation both work.
+- Both social links open correctly in new tabs.
+- Countdown is accurate and hydration-safe.
+- No console errors or warnings.
+- All copy matches this brief exactly. Do not invent claims, statistics, or medical promises.
+
+BUILD ORDER (to keep the build stable)
+1. Layout, tokens, typography, and fully responsive static sections.
+2. Core animations (reveals, hero choreography, countdown, timeline).
+3. Advanced effects (cursor, tilt, particles, marquee, preloader, pinned scenes), gated by device capability.
+4. Performance, accessibility, and SEO pass, then the full QA checklist.
+
+DELIVERABLE
+A polished, deployable site that feels like a boutique design studio built it: rich, fluid, and delightful on both phone and desktop, yet credible and fast. Run it, test it, and fix visual and performance issues before reporting done. Then briefly summarize the design, motion, and responsive decisions.

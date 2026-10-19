@@ -1,0 +1,16 @@
+{
+  "name": "$JOINT | Joint Care",
+  "short_name": "$JOINT",
+  "description": "Medical Cannabis & Wellness",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#CDEBD6",
+  "theme_color": "#0E4B4F",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

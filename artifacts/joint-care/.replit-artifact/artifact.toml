@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "$JOINT Wellness"
+description = "A mobile-first launch site for $JOINT, a patient-centered medical cannabis education and wellness community. Shares its mission, educational pillars, December 2026 launch timeline, and official social links."
+version = "1.0.0"
+id = "artifacts/joint-care"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22069
+
+[services.development]
+run = "pnpm --filter @workspace/joint-care run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/joint-care", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/joint-care/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22069"
+BASE_PATH = "/"
