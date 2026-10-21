@@ -48,8 +48,8 @@ const INTRO_SESSION_KEY = "joint-video-intro-seen";
 const INTRO_START_TIMEOUT_MS = 5000;
 const INTRO_STALL_TIMEOUT_MS = 8000;
 
-function shouldShowIntro(reducedMotion: boolean) {
-  if (typeof window === "undefined" || reducedMotion) {
+function shouldShowIntro(_reducedMotion: boolean) {
+  if (typeof window === "undefined") {
     return false;
   }
 
@@ -59,7 +59,6 @@ function shouldShowIntro(reducedMotion: boolean) {
     return false;
   }
 
-  // Allows the intro to be tested repeatedly.
   if (params.has("replay-intro")) {
     return true;
   }
@@ -70,7 +69,6 @@ function shouldShowIntro(reducedMotion: boolean) {
     return true;
   }
 }
-
 function markIntroSeen() {
   try {
     sessionStorage.setItem(INTRO_SESSION_KEY, "1");
@@ -301,43 +299,94 @@ function ParticleField({ reducedMotion }: { reducedMotion: boolean }) {
     <canvas ref={canvasRef} className="particle-field" aria-hidden="true" />
   );
 }
-
 function Preloader({ reducedMotion }: { reducedMotion: boolean }) {
   const [visible, setVisible] = useState(() => shouldShowIntro(reducedMotion));
-  const [started, setStarted] = useState(false);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const [loadError, setLoadError] = useState(false);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const finishIntro = () => {
     markIntroSeen();
 
-    const video = document.getElementById(
-      "joint-intro-video",
-    ) as HTMLVideoElement | null;
-
-    if (video) {
-      video.pause();
-    }
-
+    videoRef.current?.pause();
     setVisible(false);
   };
 
-  const startIntro = async () => {
-    const video = document.getElementById(
-      "joint-intro-video",
-    ) as HTMLVideoElement | null;
+  // Attempt automatic playback without sound.
+  // Muted autoplay is supported by many more browsers
+  // than automatic playback with sound.
+  useEffect(() => {
+    if (!visible) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    let cancelled = false;
+
+    const startMuted = async () => {
+      try {
+        video.muted = true;
+        video.volume = 1;
+
+        await video.play();
+
+        if (!cancelled) {
+          setIsPlaying(true);
+          setLoadError(false);
+        }
+      } catch {
+        if (!cancelled) {
+          // Keep the Play button available if autoplay
+          // is blocked by the browser.
+          setIsPlaying(false);
+        }
+      }
+    };
+
+    const handleVideoError = () => {
+      if (!cancelled) {
+        setLoadError(true);
+      }
+    };
+
+    video.addEventListener("error", handleVideoError);
+
+    void startMuted();
+
+    const timeout = window.setTimeout(() => {
+      if (!cancelled && video.readyState < 3) {
+        setLoadError(true);
+      }
+    }, 12000);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeout);
+      video.removeEventListener("error", handleVideoError);
+    };
+  }, [visible]);
+
+  // A visitor's tap or click allows us to request
+  // playback with the original audio enabled.
+  const enableSound = async () => {
+    const video = videoRef.current;
 
     if (!video) {
       setLoadError(true);
       return;
     }
 
-    // Start the video with its original audio turned on.
-    video.muted = false;
-    video.volume = 1;
-
     try {
+      video.muted = false;
+      video.volume = 1;
+
       await video.play();
-      setStarted(true);
+
+      setIsPlaying(true);
+      setSoundEnabled(true);
       setLoadError(false);
     } catch {
       setLoadError(true);
@@ -350,6 +399,9 @@ function Preloader({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="JOINT CARE video introduction"
       style={{
         position: "fixed",
         inset: 0,
@@ -361,11 +413,16 @@ function Preloader({ reducedMotion }: { reducedMotion: boolean }) {
       }}
     >
       <video
+        ref={videoRef}
         id="joint-intro-video"
         src={introVideoUrl}
         poster={mascot}
+        autoPlay
+        muted
         playsInline
         preload="auto"
+        controls={isPlaying}
+        onPlay={() => setIsPlaying(true)}
         onEnded={finishIntro}
         onError={() => setLoadError(true)}
         style={{
@@ -378,28 +435,30 @@ function Preloader({ reducedMotion }: { reducedMotion: boolean }) {
         }}
       />
 
-      {!started && (
+      {!soundEnabled && (
         <div
           style={{
             position: "absolute",
-            inset: 0,
+            left: "50%",
+            bottom: "clamp(28px, 8vh, 76px)",
+            transform: "translateX(-50%)",
             zIndex: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "18px",
-            padding: "24px",
-            background: "rgba(7, 63, 62, 0.55)",
+            width: "min(440px, calc(100% - 36px))",
+            boxSizing: "border-box",
+            padding: "26px 22px",
+            borderRadius: "22px",
+            background: "rgba(7, 35, 34, 0.94)",
+            border: "1px solid rgba(241, 198, 109, 0.4)",
             textAlign: "center",
+            boxShadow: "0 16px 50px rgba(0,0,0,0.3)",
           }}
         >
           <h2
             style={{
               color: "#f1c66d",
-              fontSize: "clamp(28px, 5vw, 48px)",
+              fontSize: "clamp(26px, 5vw, 38px)",
               letterSpacing: "3px",
-              margin: 0,
+              margin: "0 0 12px",
             }}
           >
             JOINT CARE
@@ -408,33 +467,51 @@ function Preloader({ reducedMotion }: { reducedMotion: boolean }) {
           <p
             style={{
               color: "#ffffff",
-              fontSize: "16px",
-              margin: 0,
+              fontSize: "15px",
+              lineHeight: 1.6,
+              margin: "0 0 20px",
             }}
           >
-            Watch our introduction with sound.
+            {loadError
+              ? "We couldn't load the introduction. Check that the video file is available, then try again."
+              : isPlaying
+                ? "Your introduction is playing. Turn on the sound to hear the original audio."
+                : "Watch our introduction with sound."}
           </p>
 
           <button
             type="button"
-            onClick={startIntro}
+            onClick={enableSound}
             style={{
+              width: "100%",
+              minHeight: "52px",
               border: 0,
               borderRadius: "999px",
-              padding: "15px 25px",
+              padding: "15px 22px",
               background: "#f1c66d",
               color: "#073f3e",
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: "14px",
+              letterSpacing: "0.5px",
               cursor: "pointer",
+              touchAction: "manipulation",
             }}
           >
-            ▶ PLAY INTRO WITH SOUND
+            {isPlaying ? "TURN ON SOUND" : "▶ PLAY INTRO WITH SOUND"}
           </button>
 
           {loadError && (
-            <p style={{ color: "#ffffff", margin: 0 }}>
-              The video did not start. Please try the button again.
+            <p
+              role="alert"
+              style={{
+                color: "#ffffff",
+                fontSize: "12px",
+                lineHeight: 1.5,
+                margin: "14px 0 0",
+              }}
+            >
+              The video may be missing from public/joint-intro.mp4 or may not
+              have loaded correctly.
             </p>
           )}
         </div>
@@ -445,15 +522,18 @@ function Preloader({ reducedMotion }: { reducedMotion: boolean }) {
         onClick={finishIntro}
         style={{
           position: "absolute",
-          right: "20px",
-          bottom: "20px",
+          top: "max(18px, env(safe-area-inset-top))",
+          right: "18px",
           zIndex: 3,
-          border: "1px solid rgba(255,255,255,0.6)",
+          border: "1px solid rgba(255,255,255,0.65)",
           borderRadius: "999px",
-          padding: "10px 18px",
-          background: "rgba(7, 63, 62, 0.9)",
+          padding: "12px 18px",
+          background: "rgba(7, 63, 62, 0.94)",
           color: "#ffffff",
+          fontSize: "13px",
+          fontWeight: 700,
           cursor: "pointer",
+          touchAction: "manipulation",
         }}
       >
         Skip intro
@@ -461,6 +541,7 @@ function Preloader({ reducedMotion }: { reducedMotion: boolean }) {
     </div>
   );
 }
+
 function BrandMark({
   compact = false,
   onClick,
