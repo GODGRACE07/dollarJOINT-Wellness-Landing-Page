@@ -1,10 +1,16 @@
-import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   AnimatePresence,
   MotionConfig,
   motion,
   useReducedMotion,
-} from 'framer-motion';
+} from "framer-motion";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -16,7 +22,7 @@ import {
   Menu,
   ShieldCheck,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   CTA_COPY,
   FOOTER_COPY,
@@ -28,24 +34,60 @@ import {
   TELEGRAM_URL,
   TIMELINE,
   X_URL,
-} from './config';
+} from "./config";
 
 const mascot = `${import.meta.env.BASE_URL}assets/joint-mascot.jpg`;
+const mascotSmall = `${import.meta.env.BASE_URL}assets/joint-mascot-480.webp`;
 const mascotSrcSet = [
   `${import.meta.env.BASE_URL}assets/joint-mascot-480.webp 480w`,
   `${import.meta.env.BASE_URL}assets/joint-mascot-800.webp 800w`,
   `${import.meta.env.BASE_URL}assets/joint-mascot-1024.webp 1024w`,
-].join(', ');
+].join(", ");
+const introVideoUrl = `${import.meta.env.BASE_URL}joint-intro.mp4`;
+const INTRO_SESSION_KEY = "joint-video-intro-seen";
+const INTRO_START_TIMEOUT_MS = 5000;
+const INTRO_STALL_TIMEOUT_MS = 8000;
+
+function shouldShowIntro(reducedMotion: boolean) {
+  if (typeof window === "undefined" || reducedMotion) {
+    return false;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.has("skip-intro")) {
+    return false;
+  }
+
+  // Allows the intro to be tested repeatedly.
+  if (params.has("replay-intro")) {
+    return true;
+  }
+
+  try {
+    return sessionStorage.getItem(INTRO_SESSION_KEY) !== "1";
+  } catch {
+    return true;
+  }
+}
+
+function markIntroSeen() {
+  try {
+    sessionStorage.setItem(INTRO_SESSION_KEY, "1");
+  } catch {
+    // The video remains dismissible even when session storage is unavailable.
+  }
+}
 
 function useFinePointer() {
   const [finePointer, setFinePointer] = useState(false);
 
   useEffect(() => {
-    const query = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const query = window.matchMedia("(hover: hover) and (pointer: fine)");
     const update = () => setFinePointer(query.matches);
     update();
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
   }, []);
 
   return finePointer;
@@ -60,15 +102,15 @@ function useLowPowerDevice() {
         connection?: { saveData?: boolean; effectiveType?: string };
       }
     ).connection;
-    const deviceMemory = (
-      navigator as Navigator & { deviceMemory?: number }
-    ).deviceMemory;
+    const deviceMemory = (navigator as Navigator & { deviceMemory?: number })
+      .deviceMemory;
     setLowPower(
-      (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4) ||
-        (typeof deviceMemory === 'number' && deviceMemory <= 4) ||
+      (navigator.hardwareConcurrency > 0 &&
+        navigator.hardwareConcurrency <= 4) ||
+        (typeof deviceMemory === "number" && deviceMemory <= 4) ||
         Boolean(connection?.saveData) ||
-        connection?.effectiveType === 'slow-2g' ||
-        connection?.effectiveType === '2g',
+        connection?.effectiveType === "slow-2g" ||
+        connection?.effectiveType === "2g",
     );
   }, []);
 
@@ -78,11 +120,11 @@ function useLowPowerDevice() {
 function useSectionState() {
   const [heroVisible, setHeroVisible] = useState(true);
   const [finalVisible, setFinalVisible] = useState(false);
-  const [activeSection, setActiveSection] = useState('mission');
+  const [activeSection, setActiveSection] = useState("mission");
 
   useEffect(() => {
-    const hero = document.querySelector<HTMLElement>('#home');
-    const final = document.querySelector<HTMLElement>('#join');
+    const hero = document.querySelector<HTMLElement>("#home");
+    const final = document.querySelector<HTMLElement>("#join");
     if (!hero || !final) return;
     const heroObserver = new IntersectionObserver(
       ([entry]) => setHeroVisible(entry.isIntersecting),
@@ -95,7 +137,7 @@ function useSectionState() {
     heroObserver.observe(hero);
     finalObserver.observe(final);
 
-    const sections = ['mission', 'pillars', 'launch']
+    const sections = ["mission", "pillars", "launch"]
       .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => section !== null);
     const sectionObserver = new IntersectionObserver(
@@ -108,7 +150,7 @@ function useSectionState() {
           )[0];
         if (visible) setActiveSection(visible.target.id);
       },
-      { rootMargin: '-24% 0px -58% 0px', threshold: [0.05, 0.2, 0.45] },
+      { rootMargin: "-24% 0px -58% 0px", threshold: [0.05, 0.2, 0.45] },
     );
     sections.forEach((section) => sectionObserver.observe(section));
 
@@ -135,12 +177,12 @@ function ScrollProgress() {
       });
     };
     update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
     };
   }, []);
 
@@ -157,19 +199,21 @@ function ParticleField({ reducedMotion }: { reducedMotion: boolean }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     const host = canvas?.parentElement;
-    const context = canvas?.getContext('2d');
+    const context = canvas?.getContext("2d");
     if (!canvas || !host || !context || reducedMotion) return;
 
-    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const fine = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
     const connection = (
       navigator as Navigator & { connection?: { saveData?: boolean } }
     ).connection;
-    const deviceMemory = (
-      navigator as Navigator & { deviceMemory?: number }
-    ).deviceMemory;
+    const deviceMemory = (navigator as Navigator & { deviceMemory?: number })
+      .deviceMemory;
     const lowPower =
-      (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4) ||
-      (typeof deviceMemory === 'number' && deviceMemory <= 4) ||
+      (navigator.hardwareConcurrency > 0 &&
+        navigator.hardwareConcurrency <= 4) ||
+      (typeof deviceMemory === "number" && deviceMemory <= 4) ||
       (connection?.saveData ?? false);
     const count = fine && !lowPower ? 42 : 18;
     let width = 0;
@@ -211,7 +255,8 @@ function ParticleField({ reducedMotion }: { reducedMotion: boolean }) {
           particle.y = 1.03;
           particle.x = Math.random();
         }
-        const x = particle.x * width + Math.sin(time * 0.0003 + particle.phase) * 15;
+        const x =
+          particle.x * width + Math.sin(time * 0.0003 + particle.phase) * 15;
         const y = particle.y * height;
         const dx = x - pointerX;
         const dy = y - pointerY;
@@ -234,93 +279,188 @@ function ParticleField({ reducedMotion }: { reducedMotion: boolean }) {
     });
     visibility.observe(host);
     resize();
-    window.addEventListener('resize', resize);
-    host.addEventListener('pointermove', move, { passive: true });
+    window.addEventListener("resize", resize);
+    host.addEventListener("pointermove", move, { passive: true });
     const onVisibilityChange = () => {
       if (document.hidden) cancelAnimationFrame(frame);
       else if (visible) frame = requestAnimationFrame(draw);
     };
-    document.addEventListener('visibilitychange', onVisibilityChange);
+    document.addEventListener("visibilitychange", onVisibilityChange);
     frame = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(frame);
       visibility.disconnect();
-      window.removeEventListener('resize', resize);
-      host.removeEventListener('pointermove', move);
-      document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener("resize", resize);
+      host.removeEventListener("pointermove", move);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, [reducedMotion]);
 
-  return <canvas ref={canvasRef} className="particle-field" aria-hidden="true" />;
-}
-
-function Preloader({ reducedMotion }: { reducedMotion: boolean }) {
-  const [show, setShow] = useState(false);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    try {
-      const skipIntro = new URLSearchParams(window.location.search).has('skip-intro');
-      if (
-        reducedMotion ||
-        skipIntro ||
-        sessionStorage.getItem('joint-intro-seen') === '1'
-      ) return;
-      setShow(true);
-      const start = performance.now();
-      let frame = 0;
-      const tick = (now: number) => {
-        const next = Math.min(100, Math.round(((now - start) / 760) * 100));
-        setProgress(next);
-        if (next >= 100) {
-          sessionStorage.setItem('joint-intro-seen', '1');
-          window.setTimeout(() => setShow(false), 140);
-          return;
-        }
-        frame = requestAnimationFrame(tick);
-      };
-      frame = requestAnimationFrame(tick);
-      return () => cancelAnimationFrame(frame);
-    } catch {
-      return;
-    }
-  }, [reducedMotion]);
-
-  const skip = () => {
-    try {
-      sessionStorage.setItem('joint-intro-seen', '1');
-    } catch {
-      // The intro is still dismissible when session storage is unavailable.
-    }
-    setShow(false);
-  };
-
   return (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          className="preloader"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
-          transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
-          role="status"
-          aria-label={SITE_COPY.tagline}
-        >
-          <img src={mascot} alt="" width="120" height="120" />
-          <div className="preloader-meter" aria-hidden="true">
-            <span style={{ transform: `scaleX(${progress / 100})` }} />
-          </div>
-          <span className="preloader-count" aria-hidden="true">{String(progress).padStart(2, '0')}</span>
-          <button type="button" className="preloader-skip" onClick={skip}>
-            {SITE_COPY.preloaderSkip}
-          </button>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <canvas ref={canvasRef} className="particle-field" aria-hidden="true" />
   );
 }
 
+function Preloader({ reducedMotion }: { reducedMotion: boolean }) {
+  const [visible, setVisible] = useState(() => shouldShowIntro(reducedMotion));
+  const [started, setStarted] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+
+  const finishIntro = () => {
+    markIntroSeen();
+
+    const video = document.getElementById(
+      "joint-intro-video",
+    ) as HTMLVideoElement | null;
+
+    if (video) {
+      video.pause();
+    }
+
+    setVisible(false);
+  };
+
+  const startIntro = async () => {
+    const video = document.getElementById(
+      "joint-intro-video",
+    ) as HTMLVideoElement | null;
+
+    if (!video) {
+      setLoadError(true);
+      return;
+    }
+
+    // Start the video with its original audio turned on.
+    video.muted = false;
+    video.volume = 1;
+
+    try {
+      await video.play();
+      setStarted(true);
+      setLoadError(false);
+    } catch {
+      setLoadError(true);
+    }
+  };
+
+  if (!visible) {
+    return null;
+  }
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 99999,
+        background: "#073f3e",
+        overflow: "hidden",
+        display: "grid",
+        placeItems: "center",
+      }}
+    >
+      <video
+        id="joint-intro-video"
+        src={introVideoUrl}
+        poster={mascot}
+        playsInline
+        preload="auto"
+        onEnded={finishIntro}
+        onError={() => setLoadError(true)}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+          background: "#073f3e",
+        }}
+      />
+
+      {!started && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "18px",
+            padding: "24px",
+            background: "rgba(7, 63, 62, 0.55)",
+            textAlign: "center",
+          }}
+        >
+          <h2
+            style={{
+              color: "#f1c66d",
+              fontSize: "clamp(28px, 5vw, 48px)",
+              letterSpacing: "3px",
+              margin: 0,
+            }}
+          >
+            JOINT CARE
+          </h2>
+
+          <p
+            style={{
+              color: "#ffffff",
+              fontSize: "16px",
+              margin: 0,
+            }}
+          >
+            Watch our introduction with sound.
+          </p>
+
+          <button
+            type="button"
+            onClick={startIntro}
+            style={{
+              border: 0,
+              borderRadius: "999px",
+              padding: "15px 25px",
+              background: "#f1c66d",
+              color: "#073f3e",
+              fontWeight: 700,
+              fontSize: "14px",
+              cursor: "pointer",
+            }}
+          >
+            ▶ PLAY INTRO WITH SOUND
+          </button>
+
+          {loadError && (
+            <p style={{ color: "#ffffff", margin: 0 }}>
+              The video did not start. Please try the button again.
+            </p>
+          )}
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={finishIntro}
+        style={{
+          position: "absolute",
+          right: "20px",
+          bottom: "20px",
+          zIndex: 3,
+          border: "1px solid rgba(255,255,255,0.6)",
+          borderRadius: "999px",
+          padding: "10px 18px",
+          background: "rgba(7, 63, 62, 0.9)",
+          color: "#ffffff",
+          cursor: "pointer",
+        }}
+      >
+        Skip intro
+      </button>
+    </div>
+  );
+}
 function BrandMark({
   compact = false,
   onClick,
@@ -329,37 +469,71 @@ function BrandMark({
   onClick?: () => void;
 }) {
   return (
-    <a className={`brand-mark${compact ? ' brand-mark--compact' : ''}`} href="#home" aria-label={SITE_COPY.brand} onClick={onClick}>
-      <span className="brand-emblem" aria-hidden="true">
-        <Leaf size={20} strokeWidth={1.7} />
+    <a
+      className={`brand-mark${compact ? " brand-mark--compact" : ""}`}
+      href="#home"
+      aria-label="JOINT CARE"
+      onClick={onClick}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "12px",
+        textDecoration: "none",
+      }}
+    >
+      <img
+        className="brand-emblem"
+        src={mascotSmall}
+        alt="Joint Care logo"
+        width={48}
+        height={48}
+        decoding="async"
+        style={{
+          display: "block",
+          width: "48px",
+          height: "48px",
+          flexShrink: 0,
+          objectFit: "contain",
+        }}
+      />
+
+      <span
+        className="brand-wordmark"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <span className="brand-name">JOINT CARE</span>
+        <span className="brand-ticker">{SITE_COPY.tagline}</span>
       </span>
-      <span className="brand-wordmark">$JOINT</span>
     </a>
   );
 }
 
 function SocialButton({
-  variant = 'primary',
+  variant = "primary",
   compact = false,
   onClick,
 }: {
-  variant?: 'primary' | 'secondary' | 'dark';
+  variant?: "primary" | "secondary" | "dark";
   compact?: boolean;
   onClick?: () => void;
 }) {
-  const isTelegram = variant !== 'secondary';
+  const isTelegram = variant !== "secondary";
   const label = isTelegram ? SITE_COPY.telegramLabel : SITE_COPY.xLabel;
   const url = isTelegram ? TELEGRAM_URL : X_URL;
   const text = isTelegram ? SITE_COPY.telegramButton : SITE_COPY.xButton;
 
   return (
     <a
-      className={`social-button social-button--${variant}${compact ? ' social-button--compact' : ''}`}
+      className={`social-button social-button--${variant}${compact ? " social-button--compact" : ""}`}
       href={url}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      data-cursor={isTelegram ? 'Join' : 'Follow'}
+      data-cursor={isTelegram ? "Join" : "Follow"}
       onClick={onClick}
     >
       <span>{text}</span>
@@ -375,7 +549,10 @@ function SocialButton({
 function XMark() {
   return (
     <svg className="x-mark" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M18.8 2H22l-7 8.1L23.2 22h-6.4l-5-7.3L5.5 22H2.2l7.5-8.7L1.8 2h6.6l4.5 6.7L18.8 2Zm-1.1 18h1.8L7.4 3.9H5.5L17.7 20Z" fill="currentColor" />
+      <path
+        d="M18.8 2H22l-7 8.1L23.2 22h-6.4l-5-7.3L5.5 22H2.2l7.5-8.7L1.8 2h6.6l4.5 6.7L18.8 2Zm-1.1 18h1.8L7.4 3.9H5.5L17.7 20Z"
+        fill="currentColor"
+      />
     </svg>
   );
 }
@@ -395,17 +572,17 @@ function MobileMenu({
   useEffect(() => {
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     firstLinkRef.current?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         event.preventDefault();
         onClose();
         toggleRef.current?.focus();
         return;
       }
-      if (event.key !== 'Tab' || !panelRef.current) return;
+      if (event.key !== "Tab" || !panelRef.current) return;
       const focusable = Array.from(
         panelRef.current.querySelectorAll<HTMLElement>(
           'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
@@ -422,10 +599,10 @@ function MobileMenu({
         first.focus();
       }
     };
-    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener("keydown", onKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener("keydown", onKeyDown);
     };
   }, [open, onClose, toggleRef]);
 
@@ -438,18 +615,35 @@ function MobileMenu({
           role="dialog"
           aria-modal="true"
           aria-label={SITE_COPY.menuLabel}
-          initial={{ clipPath: 'circle(0% at calc(100% - 42px) 38px)', opacity: 0.96 }}
-          animate={{ clipPath: 'circle(150% at calc(100% - 42px) 38px)', opacity: 1 }}
-          exit={{ clipPath: 'circle(0% at calc(100% - 42px) 38px)', opacity: 0.96 }}
+          initial={{
+            clipPath: "circle(0% at calc(100% - 42px) 38px)",
+            opacity: 0.96,
+          }}
+          animate={{
+            clipPath: "circle(150% at calc(100% - 42px) 38px)",
+            opacity: 1,
+          }}
+          exit={{
+            clipPath: "circle(0% at calc(100% - 42px) 38px)",
+            opacity: 0.96,
+          }}
           transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="mobile-menu-top">
             <BrandMark onClick={onClose} />
-            <button type="button" className="menu-close" onClick={onClose} aria-label={SITE_COPY.closeMenu}>
+            <button
+              type="button"
+              className="menu-close"
+              onClick={onClose}
+              aria-label={SITE_COPY.closeMenu}
+            >
               <X size={24} />
             </button>
           </div>
-          <nav className="mobile-menu-links" aria-label={SITE_COPY.primaryNavigation}>
+          <nav
+            className="mobile-menu-links"
+            aria-label={SITE_COPY.primaryNavigation}
+          >
             {NAV_ITEMS.map((item, index) => (
               <motion.a
                 key={item.id}
@@ -497,8 +691,12 @@ function Navbar({
 
   return (
     <>
-      <a className="skip-link" href="#main-content">{SITE_COPY.skipLink}</a>
-      <header className={`site-header${menuOpen ? ' site-header--menu-open' : ''}`}>
+      <a className="skip-link" href="#main-content">
+        {SITE_COPY.skipLink}
+      </a>
+      <header
+        className={`site-header${menuOpen ? " site-header--menu-open" : ""}`}
+      >
         <div className="nav-shell">
           <BrandMark />
           <nav className="desktop-nav" aria-label={SITE_COPY.primaryNavigation}>
@@ -506,8 +704,10 @@ function Navbar({
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                className={activeSection === item.id ? 'active' : ''}
-                aria-current={activeSection === item.id ? 'location' : undefined}
+                className={activeSection === item.id ? "active" : ""}
+                aria-current={
+                  activeSection === item.id ? "location" : undefined
+                }
               >
                 {item.label}
               </a>
@@ -517,7 +717,7 @@ function Navbar({
             <SocialButton compact />
             <button
               ref={toggleRef}
-              className={`menu-toggle${menuOpen ? ' is-open' : ''}`}
+              className={`menu-toggle${menuOpen ? " is-open" : ""}`}
               type="button"
               aria-label={menuOpen ? SITE_COPY.closeMenu : SITE_COPY.openMenu}
               aria-expanded={menuOpen}
@@ -552,13 +752,10 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
             <span className="eyebrow-mark" aria-hidden="true" />
             {HERO_COPY.eyebrow}
           </motion.p>
-          <motion.h1
-            id="hero-heading"
-            aria-label={HERO_COPY.heading.join(' ')}
-          >
+          <motion.h1 id="hero-heading" aria-label={HERO_COPY.heading.join(" ")}>
             {HERO_COPY.heading.map((line, index) => (
               <motion.span
-                className={index === 1 ? 'title-highlight' : undefined}
+                className={index === 1 ? "title-highlight" : undefined}
                 key={line}
                 aria-hidden="true"
                 initial={reducedMotion ? false : { opacity: 0, y: 28 }}
@@ -573,9 +770,7 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
               </motion.span>
             ))}
           </motion.h1>
-          <p className="hero-subhead">
-            {HERO_COPY.subheadline}
-          </p>
+          <p className="hero-subhead">{HERO_COPY.subheadline}</p>
           <motion.div
             className="hero-actions"
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}
@@ -594,12 +789,25 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
           transition={{ delay: 0.24, duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="mascot-halo" aria-hidden="true" />
-          <div className="mascot-orbit mascot-orbit--outer" aria-hidden="true" />
-          <div className="mascot-orbit mascot-orbit--inner" aria-hidden="true" />
+          <div
+            className="mascot-orbit mascot-orbit--outer"
+            aria-hidden="true"
+          />
+          <div
+            className="mascot-orbit mascot-orbit--inner"
+            aria-hidden="true"
+          />
           <div className="mascot-badge" aria-hidden="true">
             <svg viewBox="0 0 120 120">
-              <defs><path id="badge-circle" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs>
-              <text><textPath href="#badge-circle">{SITE_COPY.badgeText}</textPath></text>
+              <defs>
+                <path
+                  id="badge-circle"
+                  d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"
+                />
+              </defs>
+              <text>
+                <textPath href="#badge-circle">{SITE_COPY.badgeText}</textPath>
+              </text>
             </svg>
             <Flower2 size={20} strokeWidth={1.4} />
           </div>
@@ -615,12 +823,25 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
               fetchPriority="high"
             />
           </div>
-          <div className="hero-chip hero-chip--education" aria-hidden="true"><FlaskConical size={15} />{SITE_COPY.chips[0]}</div>
-          <div className="hero-chip hero-chip--patient" aria-hidden="true"><ShieldCheck size={15} />{SITE_COPY.chips[1]}</div>
-          <div className="hero-chip hero-chip--community" aria-hidden="true"><Leaf size={15} />{SITE_COPY.chips[2]}</div>
+          <div className="hero-chip hero-chip--education" aria-hidden="true">
+            <FlaskConical size={15} />
+            {SITE_COPY.chips[0]}
+          </div>
+          <div className="hero-chip hero-chip--patient" aria-hidden="true">
+            <ShieldCheck size={15} />
+            {SITE_COPY.chips[1]}
+          </div>
+          <div className="hero-chip hero-chip--community" aria-hidden="true">
+            <Leaf size={15} />
+            {SITE_COPY.chips[2]}
+          </div>
         </motion.div>
       </div>
-      <a className="scroll-cue" href="#mission" aria-label={SITE_COPY.scrollCue}>
+      <a
+        className="scroll-cue"
+        href="#mission"
+        aria-label={SITE_COPY.scrollCue}
+      >
         <span>{SITE_COPY.scrollCue}</span>
         <ArrowDown size={16} aria-hidden="true" />
       </a>
@@ -638,13 +859,29 @@ function SectionEyebrow({ children }: { children: string }) {
 }
 
 function PillarIcon({ icon }: { icon: string }) {
-  if (icon === 'science') {
-    return <span className="pillar-icon pillar-icon--leaf"><FlaskConical size={24} strokeWidth={1.6} /><Leaf className="icon-leaf" size={14} strokeWidth={1.6} /></span>;
+  if (icon === "science") {
+    return (
+      <span className="pillar-icon pillar-icon--leaf">
+        <FlaskConical size={24} strokeWidth={1.6} />
+        <Leaf className="icon-leaf" size={14} strokeWidth={1.6} />
+      </span>
+    );
   }
-  if (icon === 'joint') {
-    return <span className="pillar-icon pillar-icon--gold"><Dna size={25} strokeWidth={1.6} /></span>;
+  if (icon === "joint") {
+    return (
+      <span className="pillar-icon pillar-icon--gold">
+        <Dna size={25} strokeWidth={1.6} />
+      </span>
+    );
   }
-  return <span className="pillar-icon pillar-icon--rose"><ShieldCheck size={25} strokeWidth={1.6} /><span className="medical-cross" aria-hidden="true">+</span></span>;
+  return (
+    <span className="pillar-icon pillar-icon--rose">
+      <ShieldCheck size={25} strokeWidth={1.6} />
+      <span className="medical-cross" aria-hidden="true">
+        +
+      </span>
+    </span>
+  );
 }
 
 function PillarCard({
@@ -673,7 +910,7 @@ function PillarCard({
 
   return (
     <motion.article
-      className={`pillar-card pillar-card--${accent}${pressed ? ' is-pressed' : ''}`}
+      className={`pillar-card pillar-card--${accent}${pressed ? " is-pressed" : ""}`}
       data-reveal
       role="button"
       whileHover={{ y: -5, rotateX: 1.4, rotateY: index === 1 ? -1.2 : 1.2 }}
@@ -682,7 +919,7 @@ function PillarCard({
       onClick={activate}
       onFocus={activate}
       onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
+        if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           activate();
         }
@@ -692,7 +929,9 @@ function PillarCard({
     >
       <div className="card-topline">
         <span className="card-number">{number}</span>
-        <span className="card-arrow"><ArrowUpRight size={18} aria-hidden="true" /></span>
+        <span className="card-arrow">
+          <ArrowUpRight size={18} aria-hidden="true" />
+        </span>
       </div>
       <PillarIcon icon={icon} />
       <div className="pillar-copy">
@@ -706,7 +945,11 @@ function PillarCard({
 
 function Pillars() {
   return (
-    <section className="pillars-section" id="mission" aria-labelledby="pillars-heading">
+    <section
+      className="pillars-section"
+      id="mission"
+      aria-labelledby="pillars-heading"
+    >
       <div className="page-width">
         <div className="pillars-intro" data-reveal>
           <div id="pillars">
@@ -725,7 +968,10 @@ function Pillars() {
           {[0, 1].map((copy) => (
             <span key={copy}>
               {SITE_COPY.marqueeWords.map((word) => (
-                <span key={word}>{word}<i>✳</i></span>
+                <span key={word}>
+                  {word}
+                  <i>✳</i>
+                </span>
               ))}
             </span>
           ))}
@@ -768,15 +1014,24 @@ function Countdown() {
           <div className="live-message">{SITE_COPY.liveMessage}</div>
         ) : (
           parts.map((value, index) => (
-            <div className={`countdown-tile${index === 3 ? ' countdown-tile--seconds' : ''}`} key={units[index]}>
-              <span className="countdown-value">{index === 0 ? value : String(value).padStart(2, '0')}</span>
+            <div
+              className={`countdown-tile${index === 3 ? " countdown-tile--seconds" : ""}`}
+              key={units[index]}
+            >
+              <span className="countdown-value">
+                {index === 0 ? value : String(value).padStart(2, "0")}
+              </span>
               <span className="countdown-unit">{units[index]}</span>
-              {index === 3 && <span className="seconds-ring" aria-hidden="true" />}
+              {index === 3 && (
+                <span className="seconds-ring" aria-hidden="true" />
+              )}
             </div>
           ))
         )}
       </div>
-      <p className="sr-only" aria-live="off">{live ? SITE_COPY.liveMessage : SITE_COPY.countdownAccessible}</p>
+      <p className="sr-only" aria-live="off">
+        {live ? SITE_COPY.liveMessage : SITE_COPY.countdownAccessible}
+      </p>
     </div>
   );
 }
@@ -785,25 +1040,70 @@ function Timeline() {
   return (
     <div className="timeline-track">
       <span className="timeline-progress" aria-hidden="true" />
+
       <ol className="timeline" aria-label={SITE_COPY.timelineLabel}>
-        {TIMELINE.map((item, index) => (
-          <li className={`timeline-item${index === 0 ? ' timeline-item--current' : ''}`} key={item.title} data-reveal>
-            <span className="timeline-node" aria-hidden="true">
-              {index === 0 ? <span className="node-ping" /> : null}
-            </span>
-            <span className="timeline-step">{item.step}</span>
-            <span className="timeline-title">{item.title}</span>
-            {item.note && <span className="timeline-note">{item.note}</span>}
-          </li>
-        ))}
+        {TIMELINE.map((item, index) => {
+          const isCompleted = index < 2;
+          const isEducationalPillars = index === 1;
+
+          return (
+            <li
+              className={`timeline-item timeline-item--${item.stage}${
+                index === 0 ? " timeline-item--current" : ""
+              }${isEducationalPillars ? " timeline-item--highlighted" : ""}`}
+              key={item.title}
+              data-reveal
+            >
+              <span
+                className="timeline-node"
+                aria-hidden="true"
+                style={
+                  isCompleted
+                    ? {
+                        display: "grid",
+                        placeItems: "center",
+                        backgroundColor: "#e6c56f",
+                        border: "2px solid #f4e3ac",
+                        color: "#073f3e",
+                        boxShadow: "0 0 0 5px rgba(230,197,111,0.18)",
+                      }
+                    : undefined
+                }
+              >
+                {isCompleted ? <Check size={13} strokeWidth={3} /> : null}
+              </span>
+
+              <span className="timeline-step">{item.step}</span>
+
+              <span
+                className="timeline-title"
+                style={
+                  isEducationalPillars
+                    ? {
+                        color: "#f0d58d",
+                        fontWeight: 700,
+                      }
+                    : undefined
+                }
+              >
+                {item.title}
+              </span>
+
+              {item.note && <span className="timeline-note">{item.note}</span>}
+            </li>
+          );
+        })}
       </ol>
     </div>
   );
 }
-
 function Launch() {
   return (
-    <section className="launch-section" id="launch" aria-labelledby="launch-heading">
+    <section
+      className="launch-section"
+      id="launch"
+      aria-labelledby="launch-heading"
+    >
       <div className="launch-glow launch-glow--one" aria-hidden="true" />
       <div className="launch-glow launch-glow--two" aria-hidden="true" />
       <div className="page-width launch-content">
@@ -814,7 +1114,9 @@ function Launch() {
         </div>
         <div className="launch-event" data-reveal>
           <div className="launch-date-block">
-            <span className="date-icon"><Dna size={19} strokeWidth={1.5} aria-hidden="true" /></span>
+            <span className="date-icon">
+              <Dna size={19} strokeWidth={1.5} aria-hidden="true" />
+            </span>
             <div>
               <span className="date-kicker">{SITE_COPY.launchEventLabel}</span>
               <strong>{SITE_COPY.launchDate}</strong>
@@ -827,11 +1129,16 @@ function Launch() {
         </div>
         <div className="principle-row" aria-label={SITE_COPY.principlesLabel}>
           {PRINCIPLES.map((principle) => (
-            <span className="principle-chip" key={principle}><Check size={14} aria-hidden="true" />{principle}</span>
+            <span className="principle-chip" key={principle}>
+              <Check size={14} aria-hidden="true" />
+              {principle}
+            </span>
           ))}
         </div>
       </div>
-      <div className="launch-helix" aria-hidden="true"><Dna size={124} strokeWidth={0.5} /></div>
+      <div className="launch-helix" aria-hidden="true">
+        <Dna size={124} strokeWidth={0.5} />
+      </div>
     </section>
   );
 }
@@ -844,20 +1151,30 @@ function FinalCta() {
   };
 
   return (
-    <section className={`final-cta${burst ? ' is-bursting' : ''}`} id="join" aria-labelledby="join-heading">
+    <section
+      className={`final-cta${burst ? " is-bursting" : ""}`}
+      id="join"
+      aria-labelledby="join-heading"
+    >
       <div className="cta-orb" aria-hidden="true" />
       <div className="cta-mascot-peek" aria-hidden="true">
         <img src={mascot} alt="" width="260" height="260" loading="lazy" />
       </div>
       <div className="cta-leaves" aria-hidden="true">
-        {Array.from({ length: 8 }, (_, index) => <Leaf key={index} size={16 + (index % 3) * 3} />)}
+        {Array.from({ length: 8 }, (_, index) => (
+          <Leaf key={index} size={16 + (index % 3) * 3} />
+        ))}
       </div>
       <div className="page-width final-cta-inner" data-reveal>
         <div className="cta-copy">
           <h2 id="join-heading">{CTA_COPY.heading}</h2>
           <p>{CTA_COPY.body}</p>
         </div>
-        <div className="cta-actions" onMouseEnter={triggerBurst} onClick={triggerBurst}>
+        <div
+          className="cta-actions"
+          onMouseEnter={triggerBurst}
+          onClick={triggerBurst}
+        >
           <SocialButton onClick={triggerBurst} />
           <SocialButton variant="secondary" onClick={triggerBurst} />
         </div>
@@ -875,18 +1192,40 @@ function Footer() {
           <span>{SITE_COPY.tagline}</span>
         </div>
         <nav className="footer-nav" aria-label={SITE_COPY.footerNavigation}>
-          {NAV_ITEMS.map((item) => <a href={`#${item.id}`} key={item.id}>{item.label}</a>)}
+          {NAV_ITEMS.map((item) => (
+            <a href={`#${item.id}`} key={item.id}>
+              {item.label}
+            </a>
+          ))}
         </nav>
         <div className="footer-socials">
-          <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label={SITE_COPY.telegramLabel}><span>Telegram</span><ArrowUpRight size={15} /></a>
-          <a href={X_URL} target="_blank" rel="noopener noreferrer" aria-label={SITE_COPY.xLabel}><span>Follow on X</span><ArrowUpRight size={15} /></a>
+          <a
+            href={TELEGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={SITE_COPY.telegramLabel}
+          >
+            <span>Telegram</span>
+            <ArrowUpRight size={15} />
+          </a>
+          <a
+            href={X_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={SITE_COPY.xLabel}
+          >
+            <span>Follow on X</span>
+            <ArrowUpRight size={15} />
+          </a>
         </div>
       </div>
       <div className="page-width footer-bottom">
         <p className="disclaimer">{FOOTER_COPY.disclaimer}</p>
         <div className="footer-meta">
           <span>{FOOTER_COPY.copyright}</span>
-          <a href={X_URL} target="_blank" rel="noopener noreferrer">{FOOTER_COPY.handle}</a>
+          <a href={X_URL} target="_blank" rel="noopener noreferrer">
+            {FOOTER_COPY.handle}
+          </a>
         </div>
       </div>
     </footer>
@@ -904,34 +1243,37 @@ function CustomCursor({ enabled }: { enabled: boolean }) {
     let ringX = x;
     let ringY = y;
     let frame = 0;
-    let label = '';
+    let label = "";
     const setTarget = (event: PointerEvent) => {
       x = event.clientX;
       y = event.clientY;
-      const target = (event.target as HTMLElement).closest<HTMLElement>('[data-cursor]');
-      label = target?.dataset.cursor ?? '';
-      cursorRef.current?.style.setProperty('--cursor-x', `${x}px`);
-      cursorRef.current?.style.setProperty('--cursor-y', `${y}px`);
-      ringRef.current?.style.setProperty('--cursor-label', `"${label}"`);
-      ringRef.current?.classList.toggle('cursor-ring--active', Boolean(label));
+      const target = (event.target as HTMLElement).closest<HTMLElement>(
+        "[data-cursor]",
+      );
+      label = target?.dataset.cursor ?? "";
+      cursorRef.current?.style.setProperty("--cursor-x", `${x}px`);
+      cursorRef.current?.style.setProperty("--cursor-y", `${y}px`);
+      ringRef.current?.style.setProperty("--cursor-label", `"${label}"`);
+      ringRef.current?.classList.toggle("cursor-ring--active", Boolean(label));
     };
     const animate = () => {
       ringX += (x - ringX) * 0.16;
       ringY += (y - ringY) * 0.16;
-      ringRef.current?.style.setProperty('--cursor-x', `${ringX}px`);
-      ringRef.current?.style.setProperty('--cursor-y', `${ringY}px`);
+      ringRef.current?.style.setProperty("--cursor-x", `${ringX}px`);
+      ringRef.current?.style.setProperty("--cursor-y", `${ringY}px`);
       frame = requestAnimationFrame(animate);
     };
-    const press = () => ringRef.current?.classList.add('cursor-ring--pressed');
-    const release = () => ringRef.current?.classList.remove('cursor-ring--pressed');
-    window.addEventListener('pointermove', setTarget, { passive: true });
-    window.addEventListener('pointerdown', press);
-    window.addEventListener('pointerup', release);
+    const press = () => ringRef.current?.classList.add("cursor-ring--pressed");
+    const release = () =>
+      ringRef.current?.classList.remove("cursor-ring--pressed");
+    window.addEventListener("pointermove", setTarget, { passive: true });
+    window.addEventListener("pointerdown", press);
+    window.addEventListener("pointerup", release);
     frame = requestAnimationFrame(animate);
     return () => {
-      window.removeEventListener('pointermove', setTarget);
-      window.removeEventListener('pointerdown', press);
-      window.removeEventListener('pointerup', release);
+      window.removeEventListener("pointermove", setTarget);
+      window.removeEventListener("pointerdown", press);
+      window.removeEventListener("pointerup", release);
       cancelAnimationFrame(frame);
     };
   }, [enabled]);
@@ -948,18 +1290,20 @@ function CustomCursor({ enabled }: { enabled: boolean }) {
 function ScrollReveals({ reducedMotion }: { reducedMotion: boolean }) {
   useEffect(() => {
     if (reducedMotion) {
-      document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((element) => {
-        element.classList.add('is-visible');
-      });
+      document
+        .querySelectorAll<HTMLElement>("[data-reveal]")
+        .forEach((element) => {
+          element.classList.add("is-visible");
+        });
       return;
     }
 
-    let gsap: typeof import('gsap').gsap;
-    let ScrollTrigger: typeof import('gsap/ScrollTrigger').ScrollTrigger;
+    let gsap: typeof import("gsap").gsap;
+    let ScrollTrigger: typeof import("gsap/ScrollTrigger").ScrollTrigger;
     let cleanup: (() => void) | undefined;
     let refreshFrame = 0;
     let active = true;
-    void Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(
+    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
       ([gsapModule, triggerModule]) => {
         if (!active) return;
         gsap = gsapModule.gsap;
@@ -969,41 +1313,47 @@ function ScrollReveals({ reducedMotion }: { reducedMotion: boolean }) {
           cancelAnimationFrame(refreshFrame);
           refreshFrame = requestAnimationFrame(() => ScrollTrigger.refresh());
         };
-        window.addEventListener('resize', refresh);
-        window.addEventListener('orientationchange', refresh);
+        window.addEventListener("resize", refresh);
+        window.addEventListener("orientationchange", refresh);
         const context = gsap.context(() => {
           gsap.fromTo(
-            '.timeline-progress',
+            ".timeline-progress",
             { scaleX: 0, scaleY: 0 },
             {
               scaleX: 1,
               scaleY: 1,
-              ease: 'none',
+              ease: "none",
               scrollTrigger: {
-                trigger: '.timeline-track',
-                start: 'top 78%',
-                end: 'bottom 72%',
+                trigger: ".timeline-track",
+                start: "top 78%",
+                end: "bottom 72%",
                 scrub: true,
               },
             },
           );
-          gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((element) => {
-            gsap.fromTo(
-              element,
-              { y: 24, opacity: 0 },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.75,
-                ease: 'power3.out',
-                scrollTrigger: { trigger: element, start: 'top 90%', once: true },
-              },
-            );
-          });
+          gsap.utils
+            .toArray<HTMLElement>("[data-reveal]")
+            .forEach((element) => {
+              gsap.fromTo(
+                element,
+                { y: 24, opacity: 0 },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.75,
+                  ease: "power3.out",
+                  scrollTrigger: {
+                    trigger: element,
+                    start: "top 90%",
+                    once: true,
+                  },
+                },
+              );
+            });
         });
         cleanup = () => {
-          window.removeEventListener('resize', refresh);
-          window.removeEventListener('orientationchange', refresh);
+          window.removeEventListener("resize", refresh);
+          window.removeEventListener("orientationchange", refresh);
           cancelAnimationFrame(refreshFrame);
           context.revert();
         };
@@ -1024,26 +1374,32 @@ function SmoothScroll({ enabled }: { enabled: boolean }) {
     if (!enabled) return;
     let cleanup: (() => void) | undefined;
     let active = true;
-    void Promise.all([import('lenis'), import('gsap'), import('gsap/ScrollTrigger')]).then(
-      ([lenisModule, gsapModule, triggerModule]) => {
-        if (!active) return;
-        const lenis = new lenisModule.default({ duration: 1.12, smoothWheel: true, syncTouch: false });
-        const gsap = gsapModule.gsap;
-        const ScrollTrigger = triggerModule.ScrollTrigger;
-        gsap.registerPlugin(ScrollTrigger);
-        const onScroll = () => ScrollTrigger.update();
-        lenis.on('scroll', onScroll);
-        const ticker = (time: number) => lenis.raf(time * 1000);
-        gsap.ticker.add(ticker);
-        gsap.ticker.lagSmoothing(0);
-        cleanup = () => {
-          lenis.off('scroll', onScroll);
-          lenis.destroy();
-          gsap.ticker.remove(ticker);
-          ScrollTrigger.refresh();
-        };
-      },
-    );
+    void Promise.all([
+      import("lenis"),
+      import("gsap"),
+      import("gsap/ScrollTrigger"),
+    ]).then(([lenisModule, gsapModule, triggerModule]) => {
+      if (!active) return;
+      const lenis = new lenisModule.default({
+        duration: 1.12,
+        smoothWheel: true,
+        syncTouch: false,
+      });
+      const gsap = gsapModule.gsap;
+      const ScrollTrigger = triggerModule.ScrollTrigger;
+      gsap.registerPlugin(ScrollTrigger);
+      const onScroll = () => ScrollTrigger.update();
+      lenis.on("scroll", onScroll);
+      const ticker = (time: number) => lenis.raf(time * 1000);
+      gsap.ticker.add(ticker);
+      gsap.ticker.lagSmoothing(0);
+      cleanup = () => {
+        lenis.off("scroll", onScroll);
+        lenis.destroy();
+        gsap.ticker.remove(ticker);
+        ScrollTrigger.refresh();
+      };
+    });
     return () => {
       active = false;
       cleanup?.();
@@ -1086,12 +1442,12 @@ function App() {
   const simplifyMotion = prefersReducedMotion || lowPower;
 
   return (
-    <MotionConfig reducedMotion={simplifyMotion ? 'always' : 'user'}>
-      <div className={`app-shell${lowPower ? ' app-shell--low-power' : ''}`}>
+    <MotionConfig reducedMotion={simplifyMotion ? "always" : "user"}>
+      <div className={`app-shell${lowPower ? " app-shell--low-power" : ""}`}>
         <ScrollProgress />
-        <Preloader reducedMotion={simplifyMotion} />
+        <Preloader reducedMotion={prefersReducedMotion} />
         <Navbar activeSection={activeSection} onMenuChange={setMenuOpen} />
-        <main id="main-content">
+        <main id="main-content" tabIndex={-1}>
           <Hero reducedMotion={simplifyMotion} />
           <Pillars />
           <Launch />

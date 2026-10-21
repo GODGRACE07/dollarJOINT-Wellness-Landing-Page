@@ -1,0 +1,120 @@
+IMPORTANT: Make all the changes below directly in my EXISTING
+$JOINT project. Do not create a new project or a duplicate website.
+
+PROJECT:
+The existing Vite + React application is located at:
+artifacts/joint-care
+
+MY VIDEO:
+I have already uploaded my 20-second video to:
+artifacts/joint-care/public/joint-intro.mp4
+
+MAIN FILE:
+Modify the existing App.tsx file containing the Preloader,
+Navbar, Hero, Pillars, Timeline, Footer, and App components.
+
+TASK 1: REPLACE THE OLD INTRO WITH MY VIDEO
+
+Replace the existing Preloader implementation with a reliable,
+professional video introduction using my actual joint-intro.mp4.
+
+Requirements:
+- Play the video automatically on the first visit of each
+  browser tab session.
+- Use muted autoplay and playsInline for mobile compatibility.
+- Show a professional, visible Skip button.
+- When the video ends, immediately reveal the existing homepage.
+- When skipped, immediately reveal the existing homepage.
+- If playback fails, reveal the homepage instead of showing a
+  blank screen or an endless loading animation.
+- If playback takes too long to start, dismiss the intro safely.
+- If playback stalls for too long, dismiss the intro safely.
+- Do not reload the page when the video finishes.
+- Remember completion using sessionStorage.
+- Do not replay the intro during normal navigation in the same
+  browser tab session.
+- Respect accessibility settings where appropriate.
+- Do not disable the video on mobile merely because the device
+  has limited processing power.
+- Ensure the intro works on desktop, Android, and iPhone screens.
+- Use responsive sizing that prevents important video content
+  from being cropped.
+- Keep the Skip button visible above the video, including on
+  smaller screens.
+- Use the site's existing brand colors.
+- Avoid introducing new npm dependencies.
+
+PERFORMANCE:
+The video is approximately 5.4 MB. Make its delivery as efficient
+as practical without unnecessarily delaying the homepage.
+Do not embed the video in the TypeScript file.
+Do not preload the entire video unnecessarily on slow connections.
+Provide a sensible fallback so visitors are never trapped waiting
+for the video.
+
+Use the correct public asset URL for the project's existing Vite
+configuration:
+${import.meta.env.BASE_URL}joint-intro.mp4
+
+TASK 2: PRESERVE AND UPDATE MY EXISTING WEBSITE
+
+Preserve all existing components and functionality, including:
+- The current homepage and hero section.
+- The $JOINT branding and mascot.
+- Desktop navigation and mobile navigation.
+- Telegram and X links.
+- Existing animations and visual effects.
+- Educational Pillars cards.
+- Launch countdown and timeline.
+- Footer and disclaimer.
+- Existing styles and responsive behavior.
+
+Do not remove working features or replace the website with a
+simplified demo.
+
+TASK 3: EDUCATIONAL PILLARS
+
+The config already contains the heading "Educational Pillars"
+and the timeline milestone "Educational Pillars".
+
+Verify that these labels are displayed correctly in the existing
+website, on both desktop and mobile.
+
+Improve the visibility and alignment of the Educational Pillars
+timeline marker so it is easy to see, properly aligned, and
+consistent with the existing gold-and-teal design.
+
+Keep the existing milestone order and December 2026 launch date.
+
+TASK 4: MOBILE RESPONSIVENESS
+
+Check the existing CSS and components for the intro overlay
+and timeline.
+
+Make sure the intro fits the viewport on small screens, the
+Skip button is accessible, and the timeline labels and markers
+do not overlap or get clipped.
+
+Avoid unnecessary animations on low-power devices, but do not
+silently skip the requested video intro solely because the device
+is a phone or has limited processing power.
+
+TASK 5: VALIDATE EVERYTHING
+
+Edit the existing files in place.
+
+Do not create another App.tsx, another homepage, or another
+project.
+
+Check the imports and TypeScript types.
+Build the project and fix any errors caused by your changes.
+
+Verify that the video URL matches the actual file location.
+Verify that the existing site remains intact.
+Report honestly which checks were performed and which still
+need manual testing.
+
+Do not change unrelated Vercel settings or build configuration.
+
+When finished, summarize the changes and tell me how to test
+the intro in Preview.

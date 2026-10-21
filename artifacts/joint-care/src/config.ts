@@ -1,106 +1,112 @@
 export const SITE = {
-  brand: '$JOINT',
-  brandMark: '$',
-  title: '$JOINT | Joint Care: Medical Cannabis & Wellness',
+  brand: "$JOINT",
+  brandMark: "JOINT CARE",
+  title: "JOINT CARE | $JOINT — Medical Cannabis & Wellness",
   description:
-    'A dedicated brand bringing medical cannabis education, joint care, and physical healing to the community.',
-  tagline: 'Medical Cannabis & Wellness',
-  handle: '@PassTheJointSol',
-  launchDate: 'December 2026',
+    "JOINT CARE is a patient-centered medical cannabis education and wellness community from $JOINT.",
+  tagline: "Medical Cannabis & Wellness",
+  handle: "@PassTheJointSol",
+  launchDate: "December 2026",
   launchAtLocal: { year: 2026, month: 11, day: 1 },
   disclaimer:
-    'Educational content only. Not medical advice. Consult a licensed healthcare professional. Cannabis laws vary by region; you must meet local legal age requirements. $JOINT is not financial advice.',
-  copyright: '© 2026 $JOINT. All rights reserved.',
+    "Educational content only. Not medical advice. Consult a licensed healthcare professional. Cannabis laws vary by region; you must meet local legal age requirements. $JOINT is not financial advice.",
+  copyright: "© 2026 JOINT CARE · $JOINT. All rights reserved.",
   social: {
-    telegram: 'https://t.me/PassTheJointSol',
-    x: 'https://x.com/PassTheJointSol',
+    telegram: "https://t.me/PassTheJointSol",
+    x: "https://x.com/PassTheJointSol",
   },
   aria: {
-    skip: 'Skip to content',
-    brand: '$JOINT home',
-    openMenu: 'Open navigation menu',
-    closeMenu: 'Close navigation menu',
-    mobileMenu: 'Main navigation',
-    telegram: 'Join the official $JOINT Telegram',
-    x: 'Follow $JOINT on X',
-    mascot: '$JOINT Joint Care mascot, a friendly leafy character holding a medical shield',
-    countdown: 'Countdown to the official launch on December 1, 2026 at midnight local time',
-    menuDialog: 'Navigation menu',
-    xLogo: 'X',
+    skip: "Skip to content",
+    brand: "JOINT CARE and $JOINT home",
+    introDialog: "JOINT CARE video introduction",
+    openMenu: "Open navigation menu",
+    closeMenu: "Close navigation menu",
+    mobileMenu: "Main navigation",
+    telegram: "Join the official $JOINT Telegram",
+    x: "Follow $JOINT on X",
+    mascot:
+      "JOINT CARE mascot, a friendly leafy character holding a medical shield",
+    countdown:
+      "Countdown to the official launch on December 1, 2026 at midnight local time",
+    menuDialog: "Navigation menu",
+    xLogo: "X",
   },
   nav: [
-    { label: 'Mission', href: '#mission' },
-    { label: 'Pillars', href: '#pillars' },
-    { label: 'Launch', href: '#launch' },
+    { label: "Mission", href: "#mission" },
+    { label: "Pillars", href: "#pillars" },
+    { label: "Launch", href: "#launch" },
   ],
   hero: {
-    eyebrow: 'Medical Cannabis & Wellness',
-    headlineLines: ['Natural Relief.', 'Patient Advocacy.', 'Web3 Wellness.'],
+    eyebrow: "Medical Cannabis & Wellness",
+    headlineLines: ["Natural Relief.", "Patient Advocacy.", "Web3 Wellness."],
     subheadline:
-      'A dedicated brand bringing medical cannabis education, joint care, and physical healing to the community.',
-    telegram: 'Join Official Telegram',
-    followX: 'Follow on X',
-    note: 'Education first. Community always.',
-    chips: ['Education First', 'Patient Led', 'Community Driven'],
-    scroll: 'Scroll to explore',
-    badge: 'MEDICAL CANNABIS & WELLNESS',
+      "A dedicated brand bringing medical cannabis education, joint care, and physical healing to the community.",
+    telegram: "Join Official Telegram",
+    followX: "Follow on X",
+    note: "Education first. Community always.",
+    chips: ["Education First", "Patient Led", "Community Driven"],
+    scroll: "Scroll to explore",
+    badge: "MEDICAL CANNABIS & WELLNESS",
   },
   mission: {
-    eyebrow: 'Core Mission',
-    heading: 'Educational Pillars',
-    sideNote: 'A grounded approach to plant education and patient advocacy.',
+    eyebrow: "Core Mission",
+    heading: "Educational Pillars",
+    sideNote: "A grounded approach to plant education and patient advocacy.",
     cards: [
       {
-        number: '01',
-        title: 'Medical Cannabis Science',
+        number: "01",
+        title: "Medical Cannabis Science",
         description:
-          'Breaking down plant therapy, the Entourage Effect, and natural cannabinoid recovery.',
+          "Breaking down plant therapy, the Entourage Effect, and natural cannabinoid recovery.",
       },
       {
-        number: '02',
-        title: 'Joint Care & Relief',
+        number: "02",
+        title: "Joint Care & Relief",
         description:
-          'Raising awareness for non-pharmaceutical solutions for chronic pain and inflammation.',
+          "Raising awareness for non-pharmaceutical solutions for chronic pain and inflammation.",
       },
       {
-        number: '03',
-        title: 'Patient Advocacy',
+        number: "03",
+        title: "Patient Advocacy",
         description:
-          'Supporting patient rights, access, and real-world plant education.',
+          "Supporting patient rights, access, and real-world plant education.",
       },
     ],
   },
   launch: {
-    eyebrow: 'Launch Timeline & Brand Philosophy',
-    heading: 'Built for the Long Term',
-    body:
-      'We are skipping short-term speculative hype to focus on authentic community engagement, verified educational resources, and brand authority.',
-    officialDateLabel: 'Official Launch Date',
-    principles: ['Authentic Community', 'Verified Education', 'Brand Authority'],
-    timeline: [
-      { label: 'Community Building', stage: 'now' },
-      { label: 'Education Library', stage: 'next' },
-      { label: 'Official Launch: December 2026', stage: 'launch' },
+    eyebrow: "Launch Timeline & Brand Philosophy",
+    heading: "Built for the Long Term",
+    body: "We are skipping short-term speculative hype to focus on authentic community engagement, verified educational resources, and brand authority.",
+    officialDateLabel: "Official Launch Date",
+    principles: [
+      "Authentic Community",
+      "Verified Education",
+      "Brand Authority",
     ],
-    live: 'We are live.',
-    countdownLabels: ['Days', 'Hours', 'Minutes', 'Seconds'],
+    timeline: [
+      { label: "Community Building", stage: "now" },
+      { label: "Educational Pillars", stage: "next" },
+      { label: "Official Launch: December 2026", stage: "launch" },
+    ],
+    live: "We are live.",
+    countdownLabels: ["Days", "Hours", "Minutes", "Seconds"],
   },
   finalCta: {
-    heading: 'Join the community.',
-    body: 'Follow along for education, updates, and launch news.',
+    heading: "Join the community.",
+    body: "Follow along for education, updates, and launch news.",
   },
   footer: {
-    socials: 'Follow along',
-    navigation: 'Explore',
-    socialsHeading: 'Community',
+    socials: "Follow along",
+    navigation: "Explore",
+    socialsHeading: "Community",
   },
 } as const;
 
 export const ASSETS = {
-  mascot: '/assets/joint-mascot.jpg',
-  openGraph: '/og-joint.jpg',
-  favicon: '/favicon.svg',
-  manifest: '/site.webmanifest',
+  mascot: "/assets/joint-mascot.jpg",
+  openGraph: "/og-joint.jpg",
+  favicon: "/joint-care-favicon.png",
+  manifest: "/site.webmanifest",
 } as const;
 
 export const TELEGRAM_URL = SITE.social.telegram;
@@ -108,6 +114,9 @@ export const X_URL = SITE.social.x;
 
 export const SITE_COPY = {
   brand: SITE.aria.brand,
+  brandWordmark: SITE.brandMark,
+  brandTicker: SITE.brand,
+  introDialog: SITE.aria.introDialog,
   tagline: SITE.tagline,
   primaryNavigation: SITE.aria.mobileMenu,
   footerNavigation: SITE.footer.navigation,
@@ -115,7 +124,7 @@ export const SITE_COPY = {
   openMenu: SITE.aria.openMenu,
   closeMenu: SITE.aria.closeMenu,
   skipLink: SITE.aria.skip,
-  preloaderSkip: 'Skip',
+  preloaderSkip: "Skip intro",
   telegramLabel: SITE.aria.telegram,
   xLabel: SITE.aria.x,
   telegramButton: SITE.hero.telegram,
@@ -123,7 +132,7 @@ export const SITE_COPY = {
   badgeText: `${SITE.hero.badge} · ${SITE.hero.badge} · `,
   mascotAlt: SITE.aria.mascot,
   chips: SITE.hero.chips,
-  scrollCue: 'Explore our mission',
+  scrollCue: "Explore our mission",
   pillarsEyebrow: SITE.mission.eyebrow,
   pillarsHeading: SITE.mission.heading,
   launchEyebrow: SITE.launch.eyebrow,
@@ -135,9 +144,9 @@ export const SITE_COPY = {
   countdownUnits: SITE.launch.countdownLabels,
   countdownAccessible: SITE.aria.countdown,
   liveMessage: SITE.launch.live,
-  timelineLabel: 'Launch timeline',
-  principlesLabel: 'Our principles',
-  marqueeWords: ['RELIEF', 'ADVOCACY', 'WELLNESS', 'EDUCATION'],
+  timelineLabel: "Launch timeline",
+  principlesLabel: "Our principles",
+  marqueeWords: ["RELIEF", "ADVOCACY", "WELLNESS", "EDUCATION"],
 } as const;
 
 export const HERO_COPY = {
@@ -147,14 +156,14 @@ export const HERO_COPY = {
 } as const;
 
 export const NAV_ITEMS = SITE.nav.map((item) => ({
-  id: item.href.replace(/^#/, ''),
+  id: item.href.replace(/^#/, ""),
   label: item.label,
 }));
 
 export const PILLARS = SITE.mission.cards.map((card, index) => ({
   ...card,
-  icon: ['science', 'joint', 'advocacy'][index],
-  accent: ['leaf', 'gold', 'rose'][index],
+  icon: ["science", "joint", "advocacy"][index],
+  accent: ["leaf", "gold", "rose"][index],
 }));
 
 export const PRINCIPLES = SITE.launch.principles;
@@ -162,7 +171,8 @@ export const PRINCIPLES = SITE.launch.principles;
 export const TIMELINE = SITE.launch.timeline.map((item, index) => ({
   step: `0${index + 1}`,
   title: item.label,
-  note: item.stage === 'now' ? 'Now' : '',
+  stage: item.stage,
+  note: item.stage === "now" ? "Now" : "",
 }));
 
 export const CTA_COPY = {
